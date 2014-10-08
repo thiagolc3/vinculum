@@ -4,7 +4,7 @@ i=3200*60*7
 testStr='123456789012345678901234567890123456789012'
 print '\nFile size: %d Bytes' % (i*len(testStr))
 
-ser = serial.Serial('/dev/ttyUSB0', 2000000, timeout=10, rtscts=True)
+ser = serial.Serial('/dev/ttyUSB0', 3000000, timeout=10, rtscts=True)
 ser.flush()
 
 sio = io.TextIOWrapper(io.BufferedRWPair(ser, ser, 1), encoding='ascii', newline='\r')

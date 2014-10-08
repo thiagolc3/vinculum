@@ -20,7 +20,11 @@ for y in range (0, 9):
 	print '\nWRF %d' % (i*len(testStr))
 	ser.write('WRF %d\r' % (i*len(testStr)))
 	for x in range(0, i):
+		start_time = time.time()
 		ser.write(testStr)
+		until = time.time() - start_time
+		if until < 0.0003125:
+			time.sleep(0.0003125-until)
 	print sio.readline()
 
 	print '\nCLF %s' % timeNameFile

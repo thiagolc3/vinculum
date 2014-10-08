@@ -9,7 +9,7 @@ ser.flush()
 
 sio = io.TextIOWrapper(io.BufferedRWPair(ser, ser, 1), encoding='ascii', newline='\r')
 
-for z in range (0, 9):
+for y in range (0, 9):
 
 	timeNameFile=str(int(time.time()))[2:10]
 
@@ -19,9 +19,12 @@ for z in range (0, 9):
 
 	print '\nWRF %d' % (i*len(testStr))
 	ser.write('WRF %d\r' % (i*len(testStr)))
-	for x in range(0, 4480):
-		for y in range(0, 12600):
-			ser.write(testStr)
+	for x in range(0, i):
+		start_time = time.time()
+		ser.write(testStr)
+		until = time.time() - start_time
+		if until < 0.0003125:
+			time.sleep(0.0003125-until)
 	print sio.readline()
 
 	print '\nCLF %s' % timeNameFile

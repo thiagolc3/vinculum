@@ -1,34 +1,48 @@
+#!/usr/bin/python
+
 import time, serial, io
 
-i=3200*60*7
-testStr='123456789012345678901234567890123456789012'
-print '\nFile size: %d Bytes' % (i*len(testStr))
+i=4480
 
-ser = serial.Serial('/dev/ttyUSB0', 2000000, timeout=10, rtscts=True)
+ser = serial.Serial('/dev/ttyUSB0', 2000000, timeout=30, rtscts=True)
 ser.flush()
-
 sio = io.TextIOWrapper(io.BufferedRWPair(ser, ser, 1), encoding='ascii', newline='\r')
 
-for y in range (0, 9):
+# Open a file
+fo = open('string', 'r')
+string = fo.read();
 
-	timeNameFile=str(int(time.time()))[2:10]
+# Close opend file
+fo.close()
 
-	print '\nOPW %s' % timeNameFile
-	ser.write('OPW %s\r' % timeNameFile)
-	print sio.readline()
+stringLen = len(string)
+print '\nInput file size: %d Bytes' % stringLen
+print 'SDcard file size: %d Bytes' % (stringLen*i)
 
-	print '\nWRF %d' % (i*len(testStr))
-	ser.write('WRF %d\r' % (i*len(testStr)))
-	for x in range(0, i):
-		ser.write(testStr)
-	print sio.readline()
+try:
+	for y in range (9):
 
-	print '\nCLF %s' % timeNameFile
-	ser.write('CLF %s\r' % timeNameFile)
-	print sio.readline()
-	print '\n'
+		timeNameFile=str(int(time.time()))[2:10]
 
+		print '\nOPW %s' % timeNameFile
+		ser.write('OPW %s\r' % timeNameFile)
+		print sio.readline()
 
+		print 'WRF %d' % (stringLen*i)
+		ser.write('WRF %d\r' % (stringLen*i))
+		for x in range(i):
+			ser.write(string)
+		print sio.readline()
+
+		print 'CLF %s' % timeNameFile
+		ser.write('CLF %s\r' % timeNameFile)
+		print sio.readline()
+
+	print str(int(time.time()))[2:10]+'\n'
+
+except KeyboardInterrupt:
+	print('cancelled')
+	ser.close()
 
 ser.close()
 
